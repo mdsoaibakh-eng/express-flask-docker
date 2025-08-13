@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Submit Item</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+</head>
+<body style="font-family: sans-serif; max-width: 640px; margin: 40px auto;">
+  <h1>Submit Item</h1>
+  <form id="itemForm">
+    <label>
+      Item Name:
+      <input type="text" name="item_name" required />
+    </label><br/><br/>
+    <label>
+      Item Description:
+      <textarea name="item_description" required></textarea>
+    </label><br/><br/>
+    <button type="submit">Submit</button>
+  </form>
+  <pre id="result"></pre>
+
+  <script>
+    const form = document.getElementById('itemForm');
+    const result = document.getElementById('result');
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const data = Object.fromEntries(new FormData(form).entries());
+
+      try {
+        const res = await fetch('/api/submit', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data)
+        });
+        const json = await res.json();
+        result.textContent = JSON.stringify(json, null, 2);
+      } catch (err) {
+        result.textContent = 'Error: ' + err.message;
+      }
+    });
+  </script>
+</body>
+</html>
